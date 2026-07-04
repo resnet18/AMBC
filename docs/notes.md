@@ -84,7 +84,7 @@
 **代码形态灾难**
 - 人均Jupyter Notebook（.ipynb），模型定义、数据加载、训练循环、可视化混在一个文件里
 - 代码与博客分离：GitHub放代码，CSDN/GitCode放文字说明，两边对不上
-- 无requirements.txt里面一大堆奇奇怪怪的依赖
+- 无requirements.txt，但是里面一大堆奇奇怪怪的依赖
 
 **评估口径陷阱**
 - 官方基准：航班级（一个航班一个样本），截断4096，MinMax归一化，五折CV
@@ -120,6 +120,47 @@
 
 ## 2026-7-3 重新启动
 
-### 1.关于数据集
-官方给的下载链接都已经凉了，但是好在我发现复现者SongX-1不知道从哪弄到了另一个链接，经过验证这个数据集是正确的。算是这个人做了点好事（笑）
-### 2.
+### 1. 关于数据集
+我发现官方给的下载链接都已经凉了，但是好在复现者 SongX-1 不知道从哪弄到了另一个 Google Drive 镜像链接。经过验证，该数据集与论文 Section 3.2 的统计完全吻合（11446 航班，19 类维护事件，before/after 标签分布 5602/5844），确认是官方 2days 子集的忠实副本。算是这个人做了点好事（笑）
+
+### 2. 评估协议定义（AMBC Standard Protocol v1.0）
+与 AI 讨论后，我主导定义了统一评估协议，核心原则：
+- **输入对齐**：固定 4096 长度（长截尾、短补零），MinMax 归一化，NaN→0
+- **训练对齐**：禁止 Sliding Window，一个航班 = 一个训练样本
+- **评估对齐**：必须航班级（Flight-level），禁止片段级（Fragment-level）直接算 acc
+- **指标对齐**：性能层 = F1（主）+ Accuracy（辅）；效率层 = 推理时间（主）+ 显存（参考）
+
+**我的判断**：之前认为 SongX-1 的 0.810 不可比，根源不是模型强弱，而是"分母变了"（片段数 vs 航班数）。统一协议后，所有模型拉回同一起跑线。
+
+### 3. 目录结构与工程规范
+我要求拆分为 `src/`（基础设施）、`experiments/`（实验战场）、`data/`（不提交）、`audit/`（第三方只读）。AI 建议用 `notebooks/`，我拒绝（不用 .ipynb），改为纯脚本。
+
+### 4. 预处理脚本
+AI 写了 `src/preprocessing/preprocess.py`，我验证通过。输出统一为 `.npy` 格式，所有模型共用。
+
+### 5. 评估模块
+AI 写了 `src/evaluation/metrics.py`，我要求：
+- 必须支持航班级聚合（`aggregate_flight_predictions`）
+- 必须统一测量推理时间（`measure_latency`）
+- Pareto frontier 只取 F1 和 Latency，其他进表格
+
+### 6. MiniRocket 预实验
+笔记本 CPU 跑通，num_kernels=10000 结果：Acc=0.5523±0.012, F1=0.5432±0.012。与官方论文 0.598 有差距，但**流水线验证通过**（数据流、评估、结果 JSON 格式全对）。
+
+**我的判断**：预实验目标不是复现别人的数据，而是证明"统一协议下的横向对比机制"能跑通，因此暂时搁置这个问题。
+
+### 7. 关于 BiMamba 的 Bug
+AI 最初指出 SongX-1 的 `BiMambaBlock` 有 Padding 污染（`torch.flip` 把 padding 翻到序列前端）。但我发现：**标准协议下固定 4096 无 padding，bug 自动消失**。因此主实验不改架构，保留原版代码。
+
+**我的决策**：不修 bug。标准协议本身就是最干净的修复。如果后续做变长扩展，再考虑逐样本 Flip 的修复方案。
+
+### 8. Git 管理
+遇到 `.gitignore` 对嵌套 Git 仓库（`audit/` 下的 clone 目录）不生效的问题。AI 建议用 `git submodule`，我拒绝（增加复杂度）。最终方案：手动逐个 `git add` 避开 `audit/` 和 `data/`，并重写 `.gitignore` 确保编码正确。
+
+### 9. 官方基线脚本
+AI 写了 ConvMHSA 和 InceptionTime 的 TF 脚本，待工位电脑（CUDA 环境）统一跑。笔记本不跑 TF（无 GPU 太慢）。
+
+### 10. 下一步
+- 笔记本：写 SongX-1 CNN-only（`mamba_layers=0`），验证 PyTorch 流水线
+- 工位电脑：统一跑 TF 基线 + BiMamba 完整版
+- 汇总：Pareto 图 + 审计附表

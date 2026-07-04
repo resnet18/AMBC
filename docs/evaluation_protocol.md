@@ -1,6 +1,6 @@
 ```markdown
 # AMBC Evaluation Protocol
-## Air Maintenance Binary Classification Benchmark — Standard Evaluation Protocol
+## Air Maintenance Binary Classification — Standard Evaluation Protocol
 
 > **Version:** 1.0  
 > **Dataset:** NGAFID 2days maintenance event detection subset  
@@ -54,6 +54,25 @@ processed/
 | **Input Format** | `(batch, 4096, 23)` |
 | **Label Leakage** | Prohibited. The same `Master Index` must not appear in both train and validation sets. |
 | **Static Features** | Optional. If used, must be derived solely from `flight_header.csv` and processed independently. |
+
+### Data Augmentation Prohibition
+
+The following **training-time** data augmentation techniques are **strictly prohibited** in the Standard Track:
+
+| Technique | Rationale |
+|---|---|
+| **Sliding Window** | Splits a single flight into multiple fragments, artificially inflating the training set and breaking the one-flight-one-sample contract. |
+| **Window Slice / Random Crop** | Simulates variable-length flights by randomly cropping and stretching sub-windows; alters the original temporal distribution. |
+| **TimeWarp** | Applies non-linear temporal stretching/compression that may erase sharp transient features critical for fault detection. |
+| **Gaussian Noise / Scaling** | Injects synthetic noise or rescales sensor magnitudes, changing the raw sensor distribution. |
+| **Any label-altering per-sample augmentation** | Destroys the flight-level label correspondence required for evaluation. |
+
+**Permitted preprocessing** (already completed in the data-preprocessing stage):
+- MinMax normalization
+- NaN imputation
+- Fixed-length truncation / zero-padding
+
+**Extended Track** may explore data augmentation, but results must be explicitly tagged `[Training Augmentation]` and must not be directly compared with Standard Track entries.
 
 ---
 

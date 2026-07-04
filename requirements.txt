@@ -1,0 +1,21 @@
+# AMBC Benchmark Dependencies
+# ============================
+
+# Core
+numpy>=1.21
+pandas>=2.0,<3.0
+compress-pickle>=2.1
+
+# Machine Learning
+scikit-learn>=1.2,<1.8
+sktime>=1.0
+
+# Deep Learning (PyTorch)
+torch>=2.0
+mamba-ssm>=1.2.0  # CUDA only; skip on CPU-only machines
+
+# Deep Learning (TensorFlow - for official baselines)
+tensorflow>=2.15
+
+# Utilities
+tqdm

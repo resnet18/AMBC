@@ -87,7 +87,7 @@ To ensure the main table remains a **fair comparison of algorithmic architecture
 - **Different implementation routes of the same algorithm** (e.g., MiniRocket-sktime vs. MiniRocket-tsai) **are** eligible, provided they are tagged as distinct algorithmic realizations (`[Implementation: sktime]` / `[Implementation: tsai]`).
 - **Architectural modifications that change the model class** (e.g., replacing Mamba with LSTM, or adding a fundamentally different feature extraction stage) may be considered distinct entries, subject to maintainer review.
 
-**Rule of thumb:** If the only difference between two entries is "how long it was trained" or "how many features it extracted," the weaker-performing variant is excluded. The benchmark compares **architectures**, not **budgets**.
+**Rule of thumb:** If the only difference between two entries is "how long it was trained" or "how many features it extracted," the non-default variant is excluded. The benchmark compares **architectures**, not **budgets**.
 
 ---
 

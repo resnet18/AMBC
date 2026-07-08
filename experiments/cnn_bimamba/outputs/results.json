@@ -1,0 +1,83 @@
+{
+  "model": "songx1_cnn_bimamba",
+  "protocol": "AMBC-Standard-v1.0",
+  "config": {
+    "cnn_dim": 128,
+    "mamba_layers": 2,
+    "mamba_d_state": 16,
+    "mamba_d_conv": 4,
+    "mamba_expand": 2,
+    "dropout": 0.15,
+    "epochs": 10,
+    "batch_size": 32,
+    "lr": 0.0001,
+    "weight_decay": 0.0001
+  },
+  "fold_results": [
+    {
+      "fold": 0,
+      "val_acc": 0.631877729257642,
+      "val_f1": 0.45926876202694034,
+      "val_precision": 0.8211009174311926,
+      "val_recall": 0.3187889581478183,
+      "val_auc": 0.7976530303134353,
+      "latency_ms": 7.0067681884765625,
+      "peak_memory_mb": 145.58447265625,
+      "n_params": 1031682
+    },
+    {
+      "fold": 1,
+      "val_acc": 0.7011795543905636,
+      "val_f1": 0.7464788732394366,
+      "val_precision": 0.6573107049608355,
+      "val_recall": 0.8636363636363636,
+      "val_auc": 0.8110473508077635,
+      "latency_ms": 5.704267578125,
+      "peak_memory_mb": 145.58447265625,
+      "n_params": 1031682
+    },
+    {
+      "fold": 2,
+      "val_acc": 0.728265618173875,
+      "val_f1": 0.7235555555555555,
+      "val_precision": 0.7248441674087266,
+      "val_recall": 0.7222715173025732,
+      "val_auc": 0.8045425458966046,
+      "latency_ms": 5.946952514648437,
+      "peak_memory_mb": 145.58447265625,
+      "n_params": 1031682
+    },
+    {
+      "fold": 3,
+      "val_acc": 0.7252075141983398,
+      "val_f1": 0.7437881873727088,
+      "val_precision": 0.6723122238586157,
+      "val_recall": 0.8322698268003647,
+      "val_auc": 0.8072733446311784,
+      "latency_ms": 5.53631591796875,
+      "peak_memory_mb": 145.58447265625,
+      "n_params": 1031682
+    },
+    {
+      "fold": 4,
+      "val_acc": 0.744866754041066,
+      "val_f1": 0.736936936936937,
+      "val_precision": 0.7232537577365163,
+      "val_recall": 0.751147842056933,
+      "val_auc": 0.8187871135598409,
+      "latency_ms": 6.23456787109375,
+      "peak_memory_mb": 145.58447265625,
+      "n_params": 1031682
+    }
+  ],
+  "summary": {
+    "mean_acc": 0.7062794340122973,
+    "std_acc": 0.03972975767123116,
+    "mean_f1": 0.6820056630263156,
+    "std_f1": 0.11165074172547047,
+    "mean_latency_ms": 6.0857744140625005,
+    "std_latency_ms": 0.5171252556041617,
+    "mean_peak_memory_mb": 145.58447265625,
+    "n_params": 1031682
+  }
+}

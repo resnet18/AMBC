@@ -1,0 +1,78 @@
+{
+  "model": "minirocket",
+  "protocol": "AMBC-Standard-v1.0",
+  "config": {
+    "num_kernels": 10000,
+    "max_dilations": 32,
+    "classifier": "RidgeClassifierCV",
+    "use_scaler": false,
+    "n_jobs": 1
+  },
+  "fold_results": [
+    {
+      "fold": 0,
+      "val_acc": 0.7157205240174672,
+      "val_f1": 0.7076784912438258,
+      "val_precision": 0.7137681159420289,
+      "val_recall": 0.7016918967052538,
+      "val_auc": 0.7737171137720987,
+      "latency_ms": 68.49712299997918,
+      "peak_memory_mb": null,
+      "n_params": 9997
+    },
+    {
+      "fold": 1,
+      "val_acc": 0.7055482743556138,
+      "val_f1": 0.7038664323374341,
+      "val_precision": 0.7216216216216216,
+      "val_recall": 0.6869639794168096,
+      "val_auc": 0.7733649606160906,
+      "latency_ms": 125.91686200001277,
+      "peak_memory_mb": null,
+      "n_params": 9997
+    },
+    {
+      "fold": 2,
+      "val_acc": 0.7225862822193098,
+      "val_f1": 0.7174009790832221,
+      "val_precision": 0.7196428571428571,
+      "val_recall": 0.7151730257320319,
+      "val_auc": 0.778880765806285,
+      "latency_ms": 72.42604100028984,
+      "peak_memory_mb": null,
+      "n_params": 9997
+    },
+    {
+      "fold": 3,
+      "val_acc": 0.7265181301878549,
+      "val_f1": 0.7175090252707581,
+      "val_precision": 0.710455764075067,
+      "val_recall": 0.7247037374658158,
+      "val_auc": 0.7971228732418492,
+      "latency_ms": 71.12267099902965,
+      "peak_memory_mb": null,
+      "n_params": 9997
+    },
+    {
+      "fold": 4,
+      "val_acc": 0.7409349060725208,
+      "val_f1": 0.7298405466970387,
+      "val_precision": 0.7242314647377939,
+      "val_recall": 0.7355371900826446,
+      "val_auc": 0.8067003367003367,
+      "latency_ms": 70.66057000076398,
+      "peak_memory_mb": null,
+      "n_params": 9997
+    }
+  ],
+  "summary": {
+    "mean_acc": 0.7222616233705532,
+    "std_acc": 0.011739137588115487,
+    "mean_f1": 0.7152590949264557,
+    "std_f1": 0.009050159148804545,
+    "mean_latency_ms": 81.72465340001509,
+    "std_latency_ms": 22.132324894986954,
+    "mean_peak_memory_mb": null,
+    "n_params": 9997
+  }
+}

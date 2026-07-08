@@ -9,6 +9,7 @@ compress-pickle>=2.1
 # Machine Learning
 scikit-learn>=1.2,<1.8
 sktime>=1.0
+tsai
 
 # Deep Learning (PyTorch)
 torch>=2.0

@@ -1,5 +1,5 @@
 """
-src/models/songx1_bimamba.py
+src/models/cnn_bimamba.py
 ============================
 Original CNN+BiMamba architecture from SongX-1's reproduction.
 

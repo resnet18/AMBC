@@ -1,4 +1,3 @@
-```markdown
 # AMBC Evaluation Protocol
 ## Air Maintenance Binary Classification — Standard Evaluation Protocol
 
@@ -55,7 +54,7 @@ processed/
 | **Label Leakage** | Prohibited. The same `Master Index` must not appear in both train and validation sets. |
 | **Static Features** | Optional. If used, must be derived solely from `flight_header.csv` and processed independently. |
 
-### Data Augmentation Prohibition
+### 3.1 Data Augmentation Prohibition
 
 The following **training-time** data augmentation techniques are **strictly prohibited** in the Standard Track:
 
@@ -73,6 +72,22 @@ The following **training-time** data augmentation techniques are **strictly proh
 - Fixed-length truncation / zero-padding
 
 **Extended Track** may explore data augmentation, but results must be explicitly tagged `[Training Augmentation]` and must not be directly compared with Standard Track entries.
+
+### 3.2 Inclusion Criteria for Standard Track
+
+To ensure the main table remains a **fair comparison of algorithmic architectures** rather than a catalog of hyperparameter sweeps or ablation studies, the following variants are **not eligible** for standalone entry in the Standard Track:
+
+| Variant Type | Example | Rationale |
+|-------------|---------|-----------|
+| **Hyperparameter-tuned variants** | alternations on features, dilations, training epochs, batch size .etc | Tuning depth, width, or training budget is an engineering choice, not a new algorithm. |
+| **Ablation studies** | CNN-only (removing BiMamba) | These are **internal architecture diagnostics** which belong in the original paper's ablation table, not in a cross-model benchmark. |
+| **Training-augmented variants** | Any model relying on prohibited data augmentation (Section 3.1) | Discard or relegate to the Extended Track with `[Training Augmentation]` tag. |
+
+**Eligible exceptions:**
+- **Different implementation routes of the same algorithm** (e.g., MiniRocket-sktime vs. MiniRocket-tsai) **are** eligible, provided they are tagged as distinct algorithmic realizations (`[Implementation: sktime]` / `[Implementation: tsai]`).
+- **Architectural modifications that change the model class** (e.g., replacing Mamba with LSTM, or adding a fundamentally different feature extraction stage) may be considered distinct entries, subject to maintainer review.
+
+**Rule of thumb:** If the only difference between two entries is "how long it was trained" or "how many features it extracted," the weaker-performing variant is excluded. The benchmark compares **architectures**, not **budgets**.
 
 ---
 
@@ -112,7 +127,7 @@ All results listed here are directly comparable. Every entry must be reproduced 
 |-------|----|------|--------------|--------------|-------|
 | ... | ... | ... | ... | ... | ... |
 
-### 6.2 Extended Track (Appendix)
+### 6.2 Extended Track (Appendix/Optional)
 For methods that cannot conform to the Standard Protocol (e.g., variable-length-only architectures, fragment-level training), results may be listed here with explicit disclaimers.
 
 | Source | Claimed | Protocol | Audit Note |

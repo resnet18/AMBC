@@ -6,7 +6,7 @@ Standard Protocol reproduction of SongX-1's CNN+BiMamba under
 AMBC unified evaluation protocol.
 
 Input:  data/processed/fold_{i}/X_{train,val}.npy
-Output: experiments/songx1_bimamba/outputs/results.json
+Output: experiments/cnn_bimamba/outputs/results.json
 
 Modes:
     --cnn_only    Skip Mamba blocks, pure CNN backbone (CPU-friendly, for debug)
@@ -287,7 +287,7 @@ def main(cfg):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AMBC SongX-1 CNN+BiMamba")
     parser.add_argument("--processed_dir", type=str, default="data/processed")
-    parser.add_argument("--output_dir", type=str, default="experiments/songx1_bimamba/outputs")
+    parser.add_argument("--output_dir", type=str, default="experiments/cnn_bimamba/outputs")
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--epochs", type=int, default=50)
     parser.add_argument("--lr", type=float, default=1e-4)

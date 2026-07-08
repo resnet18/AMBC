@@ -34,11 +34,15 @@ import torch
 
 # tsai / fastai imports matching official notebook
 from tsai.models.MINIROCKET_Pytorch import MiniRocketFeatures, MiniRocketHead
-from tsai.models.utils import get_minirocket_features, build_ts_model
+from tsai.models.utils import build_ts_model
+from tsai.models.MINIROCKET_Pytorch import get_minirocket_features
 from tsai.data.core import get_ts_dls
-from tsai.data.transforms import TSClassification, TSStandardize
+from tsai.data.transforms import TSClassification
+from tsai.data.preprocessing import TSStandardize
 from fastai.vision import *
 from fastai.callback.progress import CSVLogger
+from fastai.learner import Learner
+from fastai.metrics import accuracy
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from src.evaluation.metrics import compute_classification_metrics
@@ -57,6 +61,10 @@ def load_fold(processed_dir: str, fold: int):
     # ---------------------------------------------------------
     # tsai MiniRocketFeatures expects (N, C, T) = (N, 23, 4096).
     # Our preprocessed .npy stores (N, T, C) = (N, 4096, 23).
+    # Commenting out the following two lines reproduces the
+    # official dimension bug (c_in=4096, seq_len=23), yielding
+    # ~0.59 Acc. This matches the reported 59.8% in Yang et al.
+    # and all derived reproductions.
     # =========================================================
     X_train = np.transpose(X_train, (0, 2, 1))  # (N, 23, 4096)
     X_val = np.transpose(X_val, (0, 2, 1))       # (N, 23, 4096)

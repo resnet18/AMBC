@@ -43,6 +43,19 @@ See detailed evaluation standards and principles at `evaluation_protocol.md`.
 | 目标 | 建立收录标准 + 轻量架构探索 |
 | 评估协议 | `evaluation_protocol.md` |
 
+## 初步结论
+
+| # | 方法 | 结果（预实验） |
+|---|------|------|
+| 1 | Logistic Regression | Acc ~0.63 / F1 ~0.63 |
+| 2 | MiniRocket (sktime/RidgeClassifierCV) | Acc ~0.72 / F1 ~0.71 |
+| 3 | MiniRocket (tsai/MiniRocketHeadNN) | Acc ~0.73 / F1 ~0.72 |
+| 4 | CNN+BiMamba (WSL2) | Acc ~0.71 / F1 ~0.68 |
+| 5 | InceptionTime (PyTorch) | Acc ~0.75 / F1 ~0.75 |
+| 6 | ConvMHSA (PyTorch) | Acc ~0.76 / F1 ~0.76 |
+| 6 | ConvMHSA (PyTorch/Fixed) | Acc ~0.76 / F1 ~0.76 |
+| 7 | MiniRocket (sktime) + 统计特征 (LR) | Acc ~0.71 / F1 ~0.71 |
+
 ---
 
 *Created for the lab qualifying task. Not an official benchmark — yet.*

@@ -159,7 +159,10 @@ def main(cfg):
             enhanced=cfg.enhanced,
         ).to(device)
 
-        if hasattr(torch, 'compile'):
+        # [HARDWARE APPROXIMATION] torch.compile disabled on Windows because
+        # Triton (required by torch.compile/inductor backend) is Linux-only.
+        # This suppresses the "triton not found" and "Not enough SMs" warnings.
+        if hasattr(torch, 'compile') and os.name != 'nt':
             model = torch.compile(model, mode="default")
 
         criterion = nn.CrossEntropyLoss()
@@ -200,6 +203,8 @@ def main(cfg):
 
         for epoch in tqdm(range(cfg.epochs), desc=f"[Fold {fold}] Training", leave=False):
             model.train()
+            optimizer.zero_grad()
+
             # [HARDWARE APPROXIMATION] Gradient accumulation loop.
             # Official TF/TPU config uses batch_size=128. On RTX 5060 Ti 16GB,
             # batch_size=128 saturates VRAM (>95%) and triggers allocator
@@ -211,11 +216,6 @@ def main(cfg):
             #   -> backward() accumulates scaled gradients
             #   -> step() updates with the mean over 128 samples.
             # Note: LayerNorm stats are per-sample, so this is exact for our model.
-            # If the last micro-batch of an epoch is incomplete (i.e. len(train_loader)
-            # is not divisible by accumulation_steps), the remaining gradients are
-            # stepped anyway to avoid data loss; the scale is slightly off for that
-            # last step only, but the impact is negligible (<0.1% of data).
-            optimizer.zero_grad()
             for i, (xb, yb) in enumerate(train_loader):
                 xb, yb = xb.to(device), yb.to(device)
                 with autocast(device_type='cuda'):
@@ -223,23 +223,19 @@ def main(cfg):
                     loss = criterion(logits, yb) / accumulation_steps
                 scaler.scale(loss).backward()
 
-                if (i + 1) % accumulation_steps == 0:
+                # Step optimizer when accumulation buffer is full OR at the last
+                # batch of the epoch. This avoids the "No inf checks" error
+                # from calling scaler.step() with zero gradients.
+                is_last = (i + 1) == len(train_loader)
+                if (i + 1) % accumulation_steps == 0 or is_last:
                     scaler.step(optimizer)
                     scaler.update()
                     optimizer.zero_grad()
 
-            # Step any remaining accumulated gradients at epoch boundary.
-            # (Happens when len(train_loader) % accumulation_steps != 0.)
-            # The scale is already correct because loss was divided by
-            # accumulation_steps during backward.
-            scaler.step(optimizer)
-            scaler.update()
-            optimizer.zero_grad()
-
             if scheduler:
                 scheduler.step()
 
-            # Validation every 10 epochs + final epoch
+            # Validation every 20 epochs + final epoch
             if (epoch + 1) % 20 == 0 or epoch == cfg.epochs - 1:
                 model.eval()
                 all_preds = []

@@ -207,7 +207,7 @@ def main(cfg):
 
     # --- Save results ---
     results = {
-        "model": "minirocket",
+        "model": "minirocket_sktime",
         "protocol": "AMBC-Standard-v1.0",
         "config": {
             "num_kernels": cfg.num_kernels,

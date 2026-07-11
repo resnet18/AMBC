@@ -78,11 +78,22 @@ def main(cfg):
             y_true=y_val, y_pred=y_pred, y_prob=y_prob, pos_label=1,
         )
 
-        # Latency
-        dummy = X_val_f[:1]
+        # Latency: end-to-end from raw input (N, 4096, 23)
+        # Includes: extract_stats + MiniRocket.transform + concat + scaler + LR
+        dummy_raw = X_val[:1]  # (1, 4096, 23)
         t0 = time.perf_counter()
         for _ in range(100):
-            _ = clf.predict_proba(dummy)
+            # 1. Stats
+            d_stats = extract_stats(dummy_raw)
+            # 2. MiniRocket
+            d_mr = np.transpose(dummy_raw, (0, 2, 1))
+            d_mr_feat = mr.transform(d_mr).to_numpy(dtype=np.float32)
+            # 3. Fusion
+            d_fused = np.concatenate([d_stats, d_mr_feat], axis=1)
+            # 4. Scale
+            d_scaled = scaler.transform(d_fused)
+            # 5. Predict
+            _ = clf.predict_proba(d_scaled)
         latency_ms = (time.perf_counter() - t0) * 1000.0 / 100
 
         result = {

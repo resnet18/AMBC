@@ -27,7 +27,7 @@ from torch.utils.data import DataLoader
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from src.data.ambc_dataset import AMBCSequenceDataset
-from src.models.songx1_bimamba import CNNBiMambaClassifier
+from src.models.cnn_bimamba import CNNBiMambaClassifier
 from src.evaluation.metrics import (
     compute_classification_metrics,
     measure_latency,
@@ -260,7 +260,7 @@ def main(cfg):
 
     # --- Save ---
     results = {
-        "model": "songx1_cnn_bimamba" if not cfg.cnn_only else "songx1_cnn_only",
+        "model": "cnn_bimamba" if not cfg.cnn_only else "cnn_only",
         "protocol": "AMBC-Standard-v1.0",
         "config": {
             "cnn_dim": cfg.cnn_dim,

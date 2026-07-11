@@ -1,5 +1,5 @@
 {
-  "model": "minirocket",
+  "model": "minirocket_sktime",
   "protocol": "AMBC-Standard-v1.0",
   "config": {
     "num_kernels": 10000,

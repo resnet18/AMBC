@@ -1,5 +1,5 @@
 {
-  "model": "songx1_cnn_bimamba",
+  "model": "cnn_bimamba",
   "protocol": "AMBC-Standard-v1.0",
   "config": {
     "cnn_dim": 128,

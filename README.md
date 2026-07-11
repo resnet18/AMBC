@@ -59,7 +59,7 @@ See `evaluation_protocol.md` for the full standard.
 
 ## Maintenance Policy
 
-**AMBC is not a living benchmark.** The NGAFID maintenance dataset is a valuable *real-world* resource, but its binary classification task has a hard accuracy ceiling (~0.75) imposed by coarse labels and high pilot-induced variance. It is unlikely to become a "second CWRU" for the TSC community.
+**AMBC is not a living benchmark.** The NGAFID maintenance dataset is a valuable *real-world* resource, but its binary classification task has a hard accuracy ceiling (~0.75) imposed by coarse labels and high pilot-induced variance. It is unlikely to become an available benchmark for the TSC community.
 
 **Therefore:**
 - No active state of the art chasing.
